@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS monitoring_metrics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cpu_usage REAL NOT NULL,
+    memory_usage REAL NOT NULL,
+    disk_usage REAL NOT NULL,
+    bytes_sent INTEGER NOT NULL,
+    bytes_received INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
