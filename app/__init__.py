@@ -1,6 +1,7 @@
 from flask import Flask
 
 from app.database.db import init_db
+from app.routes.auth import auth_bp
 from app.routes.metrics import metrics_bp
 from app.routes.network import network_bp
 from app.routes.system import system_bp
@@ -11,6 +12,7 @@ def create_app():
 
     init_db()
 
+    app.register_blueprint(auth_bp)
     app.register_blueprint(system_bp)
     app.register_blueprint(network_bp)
     app.register_blueprint(metrics_bp)
