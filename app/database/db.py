@@ -1,16 +1,27 @@
+import os
 import sqlite3
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATABASE_DIR = BASE_DIR / "instance"
-DATABASE_PATH = DATABASE_DIR / "monitoring.db"
+DEFAULT_DATABASE_PATH = DATABASE_DIR / "monitoring.db"
+
+
+def get_database_path():
+    env_path = os.environ.get("DATABASE_PATH")
+    if env_path:
+        path = Path(env_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path
+
+    DATABASE_DIR.mkdir(exist_ok=True)
+    return DEFAULT_DATABASE_PATH
 
 
 def get_db():
-    DATABASE_DIR.mkdir(exist_ok=True)
-
-    connection = sqlite3.connect(DATABASE_PATH)
+    db_path = get_database_path()
+    connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
 
     return connection
