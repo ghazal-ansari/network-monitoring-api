@@ -2,12 +2,14 @@ from flask import Blueprint, request
 
 from app.database.db import get_db
 from app.services.metrics_service import collect_metrics
+from app.utils.security import jwt_required
 
 
 metrics_bp = Blueprint("metrics", __name__)
 
 
 @metrics_bp.post("/api/metrics/collect")
+@jwt_required
 def collect():
     metrics = collect_metrics()
 
@@ -18,8 +20,16 @@ def collect():
 
 
 @metrics_bp.get("/api/metrics/history")
+@jwt_required
 def metrics_history():
-    limit = request.args.get("limit", default=50, type=int)
+    limit_param = request.args.get("limit", default=50)
+
+    try:
+        limit = int(limit_param)
+    except (ValueError, TypeError):
+        return {
+            "error": "limit must be an integer"
+        }, 400
 
     if limit < 1:
         return {
@@ -59,6 +69,7 @@ def metrics_history():
 
 
 @metrics_bp.get("/api/metrics/latest")
+@jwt_required
 def latest_metrics():
     db = get_db()
 
