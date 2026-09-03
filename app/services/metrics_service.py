@@ -1,11 +1,20 @@
+import os
+import platform
+
 import psutil
 
 from app.database.db import get_db
 
 
+def _get_disk_root():
+    if platform.system() == "Windows":
+        return os.path.splitdrive(os.path.abspath(os.sep))[0] + "\\" or "C:\\"
+    return "/"
+
+
 def collect_metrics():
     memory = psutil.virtual_memory()
-    disk = psutil.disk_usage("/")
+    disk = psutil.disk_usage(_get_disk_root())
 
     network = psutil.net_io_counters()
 

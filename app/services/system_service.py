@@ -1,11 +1,18 @@
+import os
 import platform
 
 import psutil
 
 
+def _get_disk_root():
+    if platform.system() == "Windows":
+        return os.path.splitdrive(os.path.abspath(os.sep))[0] + "\\" or "C:\\"
+    return "/"
+
+
 def get_system_metrics():
     memory = psutil.virtual_memory()
-    disk = psutil.disk_usage("/")
+    disk = psutil.disk_usage(_get_disk_root())
 
     return {
         "cpu": {
