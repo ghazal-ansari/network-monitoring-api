@@ -16,7 +16,7 @@ from app.utils.security import create_access_token
 def app(tmp_path):
     test_db_path = str(tmp_path / "test_monitoring.db")
     os.environ["DATABASE_PATH"] = test_db_path
-    os.environ["SECRET_KEY"] = "test-secret-key"
+    os.environ["SECRET_KEY"] = "test-secret-key-minimum-32-bytes-for-jwt-hs256"
 
     app = create_app()
     app.config.update({

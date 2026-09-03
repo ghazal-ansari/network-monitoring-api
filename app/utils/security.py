@@ -3,10 +3,14 @@ from functools import wraps
 import os
 import bcrypt
 import jwt
-from flask import request, g, jsonify
+from flask import request, g
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "change-this-secret-key")
+DEFAULT_SECRET_KEY = "dev-secret-key-minimum-32-bytes-for-jwt-hs256-security"
+
+
+def get_secret_key():
+    return os.environ.get("SECRET_KEY", DEFAULT_SECRET_KEY)
 
 
 def hash_password(password):
@@ -33,7 +37,7 @@ def create_access_token(user_id, username, role="user"):
 
     return jwt.encode(
         payload,
-        SECRET_KEY,
+        get_secret_key(),
         algorithm="HS256"
     )
 
@@ -41,7 +45,7 @@ def create_access_token(user_id, username, role="user"):
 def decode_token(token):
     return jwt.decode(
         token,
-        SECRET_KEY,
+        get_secret_key(),
         algorithms=["HS256"]
     )
 
